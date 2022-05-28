@@ -1,5 +1,5 @@
 'use strict'
-
+require('./scss/styles.scss')
 var Hare = require("./js/Hare")
 var Wolf = require("./js/Wolf")
 var Animal = require("./js/Animal")

@@ -1,0 +1,53 @@
+.yellow {
+  background-color: yellow;
+}
+
+.brown {
+  background-color: burlywood;
+}
+
+.gray {
+  background-color: lightgray;
+}
+
+.container {
+  background-image: linear-gradient(to left, rgba(35, 117, 232, 0.9), rgba(0, 100, 158, 0.2));
+  padding: 20px;
+  min-height: 100vh;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.image {
+  display: block;
+  width: 200px;
+  height: auto;
+  margin: 0 auto;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+button:active:not(:disabled) {
+  border: 3px solid violet;
+}
+
+.buttons-wraper {
+  display: flex;
+  justify-content: space-around;
+}
+
+.animals-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  justify-content: space-around;
+}
+.animals-container div {
+  max-width: 400px;
+}
