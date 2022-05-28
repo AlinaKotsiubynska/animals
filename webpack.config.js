@@ -15,10 +15,10 @@ module.exports = {
         {
         test: /\.(jpe?g|png|gif|svg)$/i,
         type: 'asset/resource',
-        // use: [
-        //     'url-loader',
-        //     'img-loader'
-        // ]
+        use: [
+            'url-loader',
+            'img-loader'
+        ]
         },
         {
             test:/\.(s*)css$/,
