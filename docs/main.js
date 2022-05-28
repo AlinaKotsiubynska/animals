@@ -114,7 +114,7 @@ module.exports = getCardTemplate;
 /***/ (function(module) {
 
 function getImageTemplate(animal) {
-    return `<img class='image' src=${animal.image} alt=${animal.name}/>`
+    return `<img class='image' src='${animal.image}' alt='${animal.name}'/>`
 }
 
 module.exports = getImageTemplate;
