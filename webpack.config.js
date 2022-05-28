@@ -14,21 +14,13 @@ module.exports = {
     rules: [
         {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        use: [
-            'url-loader?limit=10000',
-            'img-loader'
-        ]
+        type: 'asset/resource',
+        // use: [
+        //     'url-loader',
+        //     'img-loader'
+        // ]
         },
         {
-            // test: /\.s[ac]ss$/i,
-            // use: [
-            // // Creates `style` nodes from JS strings
-            // "style-loader",
-            // // Translates CSS into CommonJS
-            // "css-loader",
-            // // Compiles Sass to CSS
-            // "sass-loader",
-            // ],
             test:/\.(s*)css$/,
          use: [
             miniCss.loader,

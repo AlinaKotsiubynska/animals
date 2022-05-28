@@ -194,11 +194,10 @@ module.exports = {
 
 /***/ }),
 /* 9 */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "d6826be5bdc2ba6cd81f05dee8c5b9c7.jpg");
+module.exports = __webpack_require__.p + "d6826be5bdc2ba6cd81f.jpg";
 
 /***/ }),
 /* 10 */
@@ -227,11 +226,10 @@ module.exports = Wolf;
 
 /***/ }),
 /* 11 */
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c70a936dfab486218747a31c6c4f6c49.jpg");
+module.exports = __webpack_require__.p + "c70a936dfab486218747.jpg";
 
 /***/ })
 /******/ 	]);
