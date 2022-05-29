@@ -15,7 +15,7 @@ function addOnCreateEventListeners(animal) {
 }
 
 function getDefaultStatus(name) {
-    return `<p class='js-status-${name}'>Congrads!!! You've created a ${name}.</p>`
+    return `<p class='js-status-${name}' data-status=''>Congrads!!! You've created a ${name}.</p>`
 }
 
 function getButtonsSet(animal, actions) {
@@ -30,8 +30,26 @@ function getButtonsSet(animal, actions) {
     return buttons;
 }
 
+function getHuntResult() {
+    var hare = document.querySelector('.js-card-hare');
+
+    if(hare === null) {
+        return null
+    }
+
+    return hare.querySelector('.js-status-hare').dataset.status !== 'hide' ? hare : null;
+}
+
+function makeHareDisabled(hareCard) {
+    var actionButtons = hareCard.querySelectorAll('.button-action');
+    actionButtons.forEach(el => el.disabled = true)
+
+}
+
 module.exports = {
     addOnCreateEventListeners: addOnCreateEventListeners,
     getDefaultStatus: getDefaultStatus,
-    getButtonsSet: getButtonsSet
+    getButtonsSet: getButtonsSet,
+    getHuntResult: getHuntResult,
+    makeHareDisabled: makeHareDisabled
 }

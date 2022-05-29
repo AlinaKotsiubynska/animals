@@ -8,11 +8,11 @@ function getCardTemplate(animal) {
     var status = utils.getDefaultStatus(animal.name);
 
     return `
-    <div class='card-${animal.name} js-card-${animal.name}'>
-        <h2>${animal.name}</h2>
+    <div class='card card-${animal.name} js-card-${animal.name}'>
+        <h2 class="animal-name">${animal.name}</h2>
         ${image}
         ${status}
-        <div class='buttons-wraper js-actions-${animal.name}'>
+        <div class='buttons-wrapper js-actions-${animal.name}'>
             ${buttons}
         </div>
     </div>

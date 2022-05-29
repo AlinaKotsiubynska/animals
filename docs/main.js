@@ -29,11 +29,11 @@ Hare.prototype = Object.create(Animal.prototype);
 Hare.prototype.constructor = Hare;
 
 Hare.prototype.jump = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.jump}`)
+    Animal.updateStatus.call(this, 'jump', `Your ${this.messages.jump}`)
 }
 
 Hare.prototype.hide = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.hide}`)
+    Animal.updateStatus.call(this, 'hide', `Your ${this.messages.hide}`)
 }
 
 Hare.prototype.walk = null;
@@ -61,11 +61,11 @@ function Animal(name, image) {
 }
 
 Animal.prototype.walk = function () {
-    Animal.updateStatus.call(this, `Your ${this.messages.walk}`)
+    Animal.updateStatus.call(this, 'walk', `Your ${this.messages.walk}`)
 }
 
 Animal.prototype.eat = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.eat}`)
+    Animal.updateStatus.call(this, 'eat', `Your ${this.messages.eat}`)
 }
 
 Animal.create = function(containerSelector) {
@@ -75,8 +75,10 @@ Animal.create = function(containerSelector) {
     utils.addOnCreateEventListeners(this)
 }
 
-Animal.updateStatus = function(newStatus) {
-    document.querySelector(`.js-status-${this.name}`).textContent = newStatus;
+Animal.updateStatus = function(status, statusMessage) {
+    var animalStatus = document.querySelector(`.js-status-${this.name}`)
+    animalStatus.textContent = statusMessage;
+    animalStatus.dataset.status = status;
 }
 
 module.exports = Animal;
@@ -95,11 +97,11 @@ function getCardTemplate(animal) {
     var status = utils.getDefaultStatus(animal.name);
 
     return `
-    <div class='card-${animal.name} js-card-${animal.name}'>
-        <h2>${animal.name}</h2>
+    <div class='card card-${animal.name} js-card-${animal.name}'>
+        <h2 class="animal-name">${animal.name}</h2>
         ${image}
         ${status}
-        <div class='buttons-wraper js-actions-${animal.name}'>
+        <div class='buttons-wrapper js-actions-${animal.name}'>
             ${buttons}
         </div>
     </div>
@@ -142,7 +144,7 @@ function addOnCreateEventListeners(animal) {
 }
 
 function getDefaultStatus(name) {
-    return `<p class='js-status-${name}'>Congrads!!! You've created a ${name}.</p>`
+    return `<p class='js-status-${name}' data-status=''>Congrads!!! You've created a ${name}.</p>`
 }
 
 function getButtonsSet(animal, actions) {
@@ -157,10 +159,28 @@ function getButtonsSet(animal, actions) {
     return buttons;
 }
 
+function getHuntResult() {
+    var hare = document.querySelector('.js-card-hare');
+
+    if(hare === null) {
+        return null
+    }
+
+    return hare.querySelector('.js-status-hare').dataset.status !== 'hide' ? hare : null;
+}
+
+function makeHareDisabled(hareCard) {
+    var actionButtons = hareCard.querySelectorAll('.button-action');
+    actionButtons.forEach(el => el.disabled = true)
+
+}
+
 module.exports = {
     addOnCreateEventListeners: addOnCreateEventListeners,
     getDefaultStatus: getDefaultStatus,
-    getButtonsSet: getButtonsSet
+    getButtonsSet: getButtonsSet,
+    getHuntResult: getHuntResult,
+    makeHareDisabled: makeHareDisabled
 }
 
 /***/ }),
@@ -170,7 +190,7 @@ module.exports = {
 function getButtonTemplate(name, action, disabled, message) {
     return `
     <button 
-        class='js-${name}-${action}' 
+        class='button button-action js-${name}-${action}' 
         type='button' 
         ${disabled ? 'disabled': ''} 
         data-message='${message}' 
@@ -208,17 +228,44 @@ module.exports = __webpack_require__.p + "d6826be5bdc2ba6cd81f.jpg";
 
 var Animal = __webpack_require__(3)
 var wolfImg = __webpack_require__(11)
+var utils = __webpack_require__(6)
 
 function Wolf() {
     Animal.call(this, 'wolf', wolfImg)
-    this.messages.hunt = this.name + ' ' + 'is hunting! Arrr!'
+    this.messages.hunt = {
+        start: 'Your' + ' ' + this.name + ' ' + 'is hunting! Arrr!',
+        success: 'Your' + ' ' + this.name + ' ' + 'hunted a hare! Well done!',
+        failure: 'Your' + ' ' + this.name + "'s" + ' ' + 'hunt failed. So pity(('
+    }
+    this.pray = null;
 }
 
 Wolf.prototype = Object.create(Animal.prototype);
 Wolf.prototype.constructor = Wolf;
 
 Wolf.prototype.hunt = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.hunt}`)
+    Animal.updateStatus.call(this, 'hunt', ` ${this.messages.hunt.start}`)
+    setTimeout(() => {
+        var hare = utils.getHuntResult()
+        if(hare === null) {
+            Animal.updateStatus.call(this, '', this.messages.hunt.failure)
+        } else {
+            this.pray = hare;
+            Animal.updateStatus.call(this, '', this.messages.hunt.success)
+            utils.makeHareDisabled(hare)
+        }
+    }, 1000)
+}
+
+Wolf.prototype.eat = function() {
+    if(this.pray === null) {
+        alert(`Your ${this.name} should hunt first!`)
+    } else {
+        Animal.updateStatus.call(this, 'eat', `Your ${this.messages.eat}`)
+        this.pray.remove()
+        this.pray = null;
+        document.querySelector('.js-create-hare').disabled = false;
+    }
 }
 
 

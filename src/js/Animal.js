@@ -14,11 +14,11 @@ function Animal(name, image) {
 }
 
 Animal.prototype.walk = function () {
-    Animal.updateStatus.call(this, `Your ${this.messages.walk}`)
+    Animal.updateStatus.call(this, 'walk', `Your ${this.messages.walk}`)
 }
 
 Animal.prototype.eat = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.eat}`)
+    Animal.updateStatus.call(this, 'eat', `Your ${this.messages.eat}`)
 }
 
 Animal.create = function(containerSelector) {
@@ -28,8 +28,10 @@ Animal.create = function(containerSelector) {
     utils.addOnCreateEventListeners(this)
 }
 
-Animal.updateStatus = function(newStatus) {
-    document.querySelector(`.js-status-${this.name}`).textContent = newStatus;
+Animal.updateStatus = function(status, statusMessage) {
+    var animalStatus = document.querySelector(`.js-status-${this.name}`)
+    animalStatus.textContent = statusMessage;
+    animalStatus.dataset.status = status;
 }
 
 module.exports = Animal;

@@ -13,11 +13,11 @@ Hare.prototype = Object.create(Animal.prototype);
 Hare.prototype.constructor = Hare;
 
 Hare.prototype.jump = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.jump}`)
+    Animal.updateStatus.call(this, 'jump', `Your ${this.messages.jump}`)
 }
 
 Hare.prototype.hide = function() {
-    Animal.updateStatus.call(this, `Your ${this.messages.hide}`)
+    Animal.updateStatus.call(this, 'hide', `Your ${this.messages.hide}`)
 }
 
 Hare.prototype.walk = null;

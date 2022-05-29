@@ -1,7 +1,7 @@
 function getButtonTemplate(name, action, disabled, message) {
     return `
     <button 
-        class='js-${name}-${action}' 
+        class='button button-action js-${name}-${action}' 
         type='button' 
         ${disabled ? 'disabled': ''} 
         data-message='${message}' 
