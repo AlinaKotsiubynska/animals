@@ -1,4 +1,4 @@
-function getButtonTemplate(name, action, disabled, message) {
+function createButton(name, action, disabled, message) {
     return `
     <button 
         class='button button-action js-${name}-${action}' 
@@ -10,4 +10,4 @@ function getButtonTemplate(name, action, disabled, message) {
     `;
 }
 
-module.exports = getButtonTemplate;
+module.exports = createButton;

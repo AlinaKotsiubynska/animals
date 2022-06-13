@@ -1,5 +1,5 @@
-function getImageTemplate(animal) {
+function createImage(animal) {
     return `<img class='image' src='${animal.image}' alt='${animal.name}'/>`
 }
 
-module.exports = getImageTemplate;
+module.exports = createImage;

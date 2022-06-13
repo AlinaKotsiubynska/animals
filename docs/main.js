@@ -17,23 +17,24 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Animal = __webpack_require__(3)
-var hareImg = __webpack_require__(9)
+var utils = __webpack_require__(4)
+var hareImg = __webpack_require__(12)
 
 function Hare() {
     Animal.call(this, 'hare', hareImg)
-    this.messages.jump = this.name + ' ' + 'jumps!!! Boing-Boing!'
-    this.messages.hide = this.name + ' ' + 'is hiding! Shhh!!!'
+    this.messages.jump = `Your ${this.name}  jumps!!! Boing-Boing!`;
+    this.messages.hide = `Your ${this.name } is hiding! Shhh!!!`;
 }
 
 Hare.prototype = Object.create(Animal.prototype);
 Hare.prototype.constructor = Hare;
 
 Hare.prototype.jump = function() {
-    Animal.updateStatus.call(this, 'jump', `Your ${this.messages.jump}`)
+    utils.updateAnimalStatus.call(this, 'jump')
 }
 
 Hare.prototype.hide = function() {
-    Animal.updateStatus.call(this, 'hide', `Your ${this.messages.hide}`)
+    utils.updateAnimalStatus.call(this, 'hide')
 }
 
 Hare.prototype.walk = null;
@@ -46,39 +47,27 @@ module.exports = Hare;
 
 "use strict";
 
-var getCardElement = __webpack_require__(4)
-var utils = __webpack_require__(6)
+var utils = __webpack_require__(4)
 
 function Animal(name, image) {
 
     this.name = name;
     this.image = image;
     this.messages = {
-        walk: this.name + ' ' + 'is walking!',
-        eat: this.name + ' ' + 'is eating! Omnomnom...',
+        walk: `Your ${this.name} is walking!`,
+        eat: `Your ${this.name} is eating! Omnomnom...`
     }
     this.status = '';
+
+    utils.createAnimal.call(this, '.js-animals-container')
 }
 
 Animal.prototype.walk = function () {
-    Animal.updateStatus.call(this, 'walk', `Your ${this.messages.walk}`)
+    utils.updateAnimalStatus.call(this, 'walk')
 }
 
 Animal.prototype.eat = function() {
-    Animal.updateStatus.call(this, 'eat', `Your ${this.messages.eat}`)
-}
-
-Animal.create = function(containerSelector) {
-    var container = document.querySelector(containerSelector);
-    container.insertAdjacentHTML('afterbegin', getCardElement(this));
-
-    utils.addOnCreateEventListeners(this)
-}
-
-Animal.updateStatus = function(status, statusMessage) {
-    var animalStatus = document.querySelector(`.js-status-${this.name}`)
-    animalStatus.textContent = statusMessage;
-    animalStatus.dataset.status = status;
+    utils.updateAnimalStatus.call(this, 'eat')
 }
 
 module.exports = Animal;
@@ -87,48 +76,8 @@ module.exports = Animal;
 /* 4 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-var getImageTemplate = __webpack_require__(5);
-var utils = __webpack_require__(6);
-var actions = (__webpack_require__(8).actions);
-
-function getCardTemplate(animal) {
-    var image = getImageTemplate(animal);
-    var buttons = utils.getButtonsSet(animal, actions);
-    var status = utils.getDefaultStatus(animal.name);
-
-    return `
-    <div class='card card-${animal.name} js-card-${animal.name}'>
-        <h2 class="animal-name">${animal.name}</h2>
-        ${image}
-        ${status}
-        <div class='buttons-wrapper js-actions-${animal.name}'>
-            ${buttons}
-        </div>
-    </div>
-    `;
-}
-
-module.exports = getCardTemplate;
-
-
-/***/ }),
-/* 5 */
-/***/ (function(module) {
-
-function getImageTemplate(animal) {
-    return `<img class='image' src='${animal.image}' alt='${animal.name}'/>`
-}
-
-module.exports = getImageTemplate;
-
-
-/***/ }),
-/* 6 */
-/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
-
 "use strict";
 
-var getButtonTemplate = __webpack_require__(7);
 
 function addOnCreateEventListeners(animal) {
     document.querySelector(`.js-actions-${animal.name}`).addEventListener('click', (e)=> {
@@ -143,22 +92,6 @@ function addOnCreateEventListeners(animal) {
     document.querySelector(`.js-create-${animal.name}`).disabled = true;
 }
 
-function getDefaultStatus(name) {
-    return `<p class='js-status-${name}' data-status=''>Congrads!!! You've created a ${name}.</p>`
-}
-
-function getButtonsSet(animal, actions) {
-    var buttons = '';
-
-    for (var action of actions) {
-        var isDisabled = animal[action] ? false : true;
-        var button = getButtonTemplate(animal.name, action, isDisabled, animal.messages[action] || '');
-        buttons += button;
-    }
-
-    return buttons;
-}
-
 function getHuntResult() {
     var hare = document.querySelector('.js-card-hare');
 
@@ -169,25 +102,92 @@ function getHuntResult() {
     return hare.querySelector('.js-status-hare').dataset.status !== 'hide' ? hare : null;
 }
 
-function makeHareDisabled(hareCard) {
-    var actionButtons = hareCard.querySelectorAll('.button-action');
+function makeAnimalDisabled(animalCard) {
+    var actionButtons = animalCard.querySelectorAll('.button-action');
     actionButtons.forEach(el => el.disabled = true)
 
 }
 
+function updateAnimalStatus(status) {
+    var animalStatus = document.querySelector(`.js-status-${this.name}`)
+    animalStatus.textContent = status ? this.messages[status] : '';
+    animalStatus.dataset.status = status;
+}
+
+function createAnimal(containerSelector) {
+    var getCardElement = __webpack_require__(5)
+    var container = document.querySelector(containerSelector);
+    container.insertAdjacentHTML('afterbegin', getCardElement(this));
+
+    addOnCreateEventListeners(this)
+}
+
 module.exports = {
-    addOnCreateEventListeners: addOnCreateEventListeners,
-    getDefaultStatus: getDefaultStatus,
-    getButtonsSet: getButtonsSet,
     getHuntResult: getHuntResult,
-    makeHareDisabled: makeHareDisabled
+    makeAnimalDisabled: makeAnimalDisabled,
+    updateAnimalStatus: updateAnimalStatus,
+    createAnimal: createAnimal
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+var actions = (__webpack_require__(6).actions);
+
+function createCard(animal) {
+    var templates = __webpack_require__(7)
+    var status = templates.createStatus(animal.name);
+    var image = templates.createImage(animal);
+    var buttons = templates.createButtonSet(animal, actions);
+
+    return `
+    <div class='card card-${animal.name} js-card-${animal.name}'>
+        <h2 class="animal-name">${animal.name}</h2>
+        ${image}
+        ${status}
+        <div class='buttons-wrapper js-actions-${animal.name}'>
+            ${buttons}
+        </div>
+    </div>
+    `;
+}
+
+module.exports = createCard;
+
+/***/ }),
+/* 6 */
+/***/ (function(module) {
+
+var actions = ['walk', 'jump', 'hide', 'hunt', 'eat']
+
+module.exports = {
+    actions: actions
 }
 
 /***/ }),
 /* 7 */
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+var createButton = __webpack_require__(8)
+var createButtonSet = __webpack_require__(9)
+var createImage = __webpack_require__(10)
+var createCard = __webpack_require__(5)
+var createDefaultStatus = __webpack_require__(11)
+
+module.exports = {
+    createButton: createButton,
+    createButtonSet: createButtonSet,
+    createImage: createImage,
+    createCard: createCard,
+    createStatus: createDefaultStatus
+}
+
+/***/ }),
+/* 8 */
 /***/ (function(module) {
 
-function getButtonTemplate(name, action, disabled, message) {
+function createButton(name, action, disabled, message) {
     return `
     <button 
         class='button button-action js-${name}-${action}' 
@@ -199,44 +199,76 @@ function getButtonTemplate(name, action, disabled, message) {
     `;
 }
 
-module.exports = getButtonTemplate;
+module.exports = createButton;
 
-
-/***/ }),
-/* 8 */
-/***/ (function(module) {
-
-var actions = ['walk', 'jump', 'hide', 'hunt', 'eat']
-
-module.exports = {
-    actions: actions
-}
 
 /***/ }),
 /* 9 */
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+function createButtonsSet(animal, actions) {
+    var templates = __webpack_require__(7)
+    var buttons = '';
+
+    for (var action of actions) {
+        var isDisabled = animal[action] ? false : true;
+        var button = templates.createButton(animal.name, action, isDisabled, animal.messages[action] || '');
+        buttons += button;
+    }
+
+    return buttons;
+}
+
+module.exports = createButtonsSet
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module) {
+
+function createImage(animal) {
+    return `<img class='image' src='${animal.image}' alt='${animal.name}'/>`
+}
+
+module.exports = createImage;
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module) {
+
+function createDefaultStatus(name) {
+    return `<p class='js-status-${name}' data-status=''>Congrads!!! You've created a ${name}.</p>`
+}
+
+module.exports = createDefaultStatus;
+
+
+/***/ }),
+/* 12 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 module.exports = __webpack_require__.p + "d6826be5bdc2ba6cd81f.jpg";
 
 /***/ }),
-/* 10 */
+/* 13 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
 
 
 var Animal = __webpack_require__(3)
-var wolfImg = __webpack_require__(11)
-var utils = __webpack_require__(6)
+var wolfImg = __webpack_require__(14)
+var utils = __webpack_require__(4)
 
 function Wolf() {
     Animal.call(this, 'wolf', wolfImg)
-    this.messages.hunt = {
-        start: 'Your' + ' ' + this.name + ' ' + 'is hunting! Arrr!',
-        success: 'Your' + ' ' + this.name + ' ' + 'hunted a hare! Well done!',
-        failure: 'Your' + ' ' + this.name + "'s" + ' ' + 'hunt failed. So pity(('
-    }
+    this.messages.huntStart = `Your ${this.name} is hunting! Arrr!`;
+    this.messages.huntSuccess = `Your ${this.name} hunted a hare! Well done!`;
+    this.messages.huntFailure = `Your ${this.name}'s hunt failed. So pity((`;
+    this.messages.eat = `Your ${this.name}'s hunt failed. So pity((`;
+    this.messages.eatFailure = `Your ${this.name} should hunt first!`;
     this.pray = null;
 }
 
@@ -244,35 +276,35 @@ Wolf.prototype = Object.create(Animal.prototype);
 Wolf.prototype.constructor = Wolf;
 
 Wolf.prototype.hunt = function() {
-    Animal.updateStatus.call(this, 'hunt', ` ${this.messages.hunt.start}`)
+    utils.updateAnimalStatus.call(this, 'huntStart')
     setTimeout(() => {
         var hare = utils.getHuntResult()
         if(hare === null) {
-            Animal.updateStatus.call(this, '', this.messages.hunt.failure)
+            utils.updateAnimalStatus.call(this, 'huntFailure')
         } else {
             this.pray = hare;
-            Animal.updateStatus.call(this, '', this.messages.hunt.success)
-            utils.makeHareDisabled(hare)
+            utils.updateAnimalStatus.call(this, 'huntSuccess')
+            utils.makeAnimalDisabled(hare)
         }
     }, 1000)
 }
 
 Wolf.prototype.eat = function() {
     if(this.pray === null) {
-        alert(`Your ${this.name} should hunt first!`)
+        utils.updateAnimalStatus.call(this, 'eatFailure')
     } else {
-        Animal.updateStatus.call(this, 'eat', `Your ${this.messages.eat}`)
+        utils.updateAnimalStatus.call(this, 'eat')
         this.pray.remove()
         this.pray = null;
         document.querySelector('.js-create-hare').disabled = false;
     }
 }
 
-
 module.exports = Wolf;
 
+
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
@@ -357,7 +389,7 @@ var __webpack_exports__ = {};
 
 __webpack_require__(1)
 var Hare = __webpack_require__(2)
-var Wolf = __webpack_require__(10)
+var Wolf = __webpack_require__(13)
 var Animal = __webpack_require__(3)
 
 document.querySelector('.js-create-buttons').addEventListener('click', (e) => {
@@ -373,7 +405,7 @@ document.querySelector('.js-create-buttons').addEventListener('click', (e) => {
         animal = new Wolf('wolf')
     }
 
-    Animal.create.call(animal, '.js-animals-container')
+    // Animal.create.call(animal, '.js-animals-container')
 })
 }();
 /******/ })()

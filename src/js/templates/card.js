@@ -1,11 +1,10 @@
-var getImageTemplate = require("./image");
-var utils = require('../utils');
 var actions = require('../constants.js').actions;
 
-function getCardTemplate(animal) {
-    var image = getImageTemplate(animal);
-    var buttons = utils.getButtonsSet(animal, actions);
-    var status = utils.getDefaultStatus(animal.name);
+function createCard(animal) {
+    var templates = require('./index')
+    var status = templates.createStatus(animal.name);
+    var image = templates.createImage(animal);
+    var buttons = templates.createButtonSet(animal, actions);
 
     return `
     <div class='card card-${animal.name} js-card-${animal.name}'>
@@ -19,4 +18,4 @@ function getCardTemplate(animal) {
     `;
 }
 
-module.exports = getCardTemplate;
+module.exports = createCard;

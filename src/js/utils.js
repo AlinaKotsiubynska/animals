@@ -1,5 +1,4 @@
 'use strict'
-var getButtonTemplate = require("./templates/button");
 
 function addOnCreateEventListeners(animal) {
     document.querySelector(`.js-actions-${animal.name}`).addEventListener('click', (e)=> {
@@ -14,22 +13,6 @@ function addOnCreateEventListeners(animal) {
     document.querySelector(`.js-create-${animal.name}`).disabled = true;
 }
 
-function getDefaultStatus(name) {
-    return `<p class='js-status-${name}' data-status=''>Congrads!!! You've created a ${name}.</p>`
-}
-
-function getButtonsSet(animal, actions) {
-    var buttons = '';
-
-    for (var action of actions) {
-        var isDisabled = animal[action] ? false : true;
-        var button = getButtonTemplate(animal.name, action, isDisabled, animal.messages[action] || '');
-        buttons += button;
-    }
-
-    return buttons;
-}
-
 function getHuntResult() {
     var hare = document.querySelector('.js-card-hare');
 
@@ -40,16 +23,29 @@ function getHuntResult() {
     return hare.querySelector('.js-status-hare').dataset.status !== 'hide' ? hare : null;
 }
 
-function makeHareDisabled(hareCard) {
-    var actionButtons = hareCard.querySelectorAll('.button-action');
+function makeAnimalDisabled(animalCard) {
+    var actionButtons = animalCard.querySelectorAll('.button-action');
     actionButtons.forEach(el => el.disabled = true)
 
 }
 
+function updateAnimalStatus(status) {
+    var animalStatus = document.querySelector(`.js-status-${this.name}`)
+    animalStatus.textContent = status ? this.messages[status] : '';
+    animalStatus.dataset.status = status;
+}
+
+function createAnimal(containerSelector) {
+    var getCardElement = require("./templates/card")
+    var container = document.querySelector(containerSelector);
+    container.insertAdjacentHTML('afterbegin', getCardElement(this));
+
+    addOnCreateEventListeners(this)
+}
+
 module.exports = {
-    addOnCreateEventListeners: addOnCreateEventListeners,
-    getDefaultStatus: getDefaultStatus,
-    getButtonsSet: getButtonsSet,
     getHuntResult: getHuntResult,
-    makeHareDisabled: makeHareDisabled
+    makeAnimalDisabled: makeAnimalDisabled,
+    updateAnimalStatus: updateAnimalStatus,
+    createAnimal: createAnimal
 }
